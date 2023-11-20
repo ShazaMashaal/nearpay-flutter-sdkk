@@ -187,9 +187,11 @@ packages:
   nearpay_flutter_sdk:
     dependency: "direct main"
     description:
-      path: ".."
-      relative: true
-    source: path
+      path: "."
+      ref: v1-google
+      resolved-ref: "3e86d0c34f04bc30174b113713b88b0ae01ae7d9"
+      url: "https://github.com/nearpayio/nearpay-flutter-sdk.git"
+    source: git
     version: "0.0.4"
   path:
     dependency: transitive

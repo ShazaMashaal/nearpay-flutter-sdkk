@@ -9,10 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nearpay_example/util.dart';
 import 'package:nearpay_flutter_sdk/errors/purchase_error/purchase_error.dart';
-import 'package:nearpay_flutter_sdk/models/session/session.dart';
-import 'package:nearpay_flutter_sdk/models/transaction_receipt/transaction_receipt.dart';
 import 'package:nearpay_flutter_sdk/nearpay.dart';
-import 'package:nearpay_flutter_sdk/types.dart';
 import 'package:uuid/uuid.dart';
 
 var uuid = Uuid();
@@ -33,11 +30,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final nearpay = Nearpay(
     authType: AuthenticationType.email,
-    authValue: "f.alhajeri@nearpay.io",
+    authValue: "s.mashaal@brdeye.com",
     env: Environments.sandbox,
     locale: Locale.localeDefault,
   );
-
+  final GlobalKey<NavigatorState> navigatorKey=GlobalKey<NavigatorState>();
   Uint8List? bytes;
 
   // NearpayState state = NearpayState.notReady;
@@ -45,12 +42,14 @@ class _MyAppState extends State<MyApp> {
   @override
   initState() {
     super.initState();
-    nearpay.initialize().catchError((e) {
+    print(nearpay);
+     nearpay.initialize().catchError((e) {
       print(e);
     });
   }
 
   Future<dynamic> purchaseWithRefund() async {
+    print(nearpay);
     print("=-=-=-=-= Start Purchase with Refund Action =-=-=-=-=");
 
     final transactionData = await nearpay
@@ -137,11 +136,13 @@ class _MyAppState extends State<MyApp> {
       if (err is PurchaseInvalidStatus) {
         print('invalid');
       }
+      showDialog(context: navigatorKey.currentContext!, builder:(c)=>Text(err.toString()));
 
-      throw err;
+      // throw err;
     });
 
     print("=-=-=-=-=-=-=-=-=-=- on purchase approved =-=-=-=-=-=-=-=-=-=-=");
+    showDialog(context: navigatorKey.currentContext!, builder:(c)=>Text(transactionData.toString()));
     transactionData.receipts?.forEach((receipt) {
       printJson(receipt.toJson());
     });
@@ -261,6 +262,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Nearpay Example'),
